@@ -11,7 +11,7 @@ public class Main {
                 TodoList tdl = new TodoList();
                 int in;
                 do {
-                    System.out.printf("1. Create new task%n2. Remove task%n3. View tasks%n0. Exit%n");
+                    System.out.printf("1. Create new task%n2. Remove task%n3. View tasks%n4. Set task status%n0. Exit%n");
                     in = sc.nextInt();
                     sc.nextLine();
                     switch (in) {
@@ -21,11 +21,7 @@ public class Main {
                             System.out.print("Name the task: ");
                                 name = sc.nextLine();
                             System.out.print("Task description: ");
-                            if (sc.nextInt() == 0) {
-                                break;
-                            } else {
                                 desc = sc.nextLine();
-                            }
                             tdl.addTask(new Task(name, desc));
                             break;
                         case 2:
@@ -48,7 +44,6 @@ public class Main {
                             System.out.printf("1. Show completed tasks%n2. Show incomplete tasks%n0. Cancel%n");
                             in = sc.nextInt();
                             if (in == 1) {
-                                //doesn't work
                                 if (tdl.filterTasks(true).isEmpty()) {
                                     System.out.println("No tasks found\n");
                                 } else {
@@ -58,7 +53,6 @@ public class Main {
                                 }
                             }
                             else if (in == 2) {
-                                //doesn't work
                                 if (tdl.filterTasks(false).isEmpty()) {
                                     System.out.println("No tasks found\n");
                                 } else {
@@ -67,6 +61,37 @@ public class Main {
                                     }
                                 }
                             }
+                            break;
+                        case 4:
+                            System.out.printf("1. Completed tasks%n2. Incomplete tasks%n0. Cancel%n");
+                            in = sc.nextInt();
+                            if (in == 0) {
+                                break;
+                            } else if (in == 1) {
+                                if (tdl.filterTasks(true).isEmpty()) {
+                                    System.out.println("No tasks found\n");
+                                } else {
+                                    System.out.println("Which task will you set as incomplete?");
+                                    for (int i = 0; i < tdl.filterTasks(true).size(); i++) {
+                                        System.out.println(i+1 + ". " + tdl.filterTasks(true).get(i).toString());
+                                    }
+                                    in = sc.nextInt();
+                                    tdl.filterTasks(true).get(in-1).setCompleted(false);
+
+                                }
+                            } else if (in == 2) {
+                                if (tdl.filterTasks(false).isEmpty()) {
+                                    System.out.println("No tasks found\n");
+                                } else {
+                                    System.out.println("Which task will you set as complete?");
+                                    for (int i = 0; i < tdl.filterTasks(false).size(); i++) {
+                                        System.out.println(i+1 + ". " + tdl.filterTasks(false).get(i).toString());
+                                    }
+                                    in = sc.nextInt();
+                                    tdl.filterTasks(false).get(in -1).setCompleted(true);
+                                }
+                            }
+                            sc.nextLine();
                             break;
                         case 0:
                             System.out.println("Goodbye!");

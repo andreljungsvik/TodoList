@@ -35,6 +35,14 @@ public class TodoList {
     }
 
     /**
+     * Ger listan av uppgifter
+     *
+     */
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    /**
      * filtrerar uppgifter baserat på deras status
      *
      * @param completed true för att filtrera slutförda uppgifter, annars false

@@ -4,129 +4,158 @@ import se.yrgo.model.Task;
 import se.yrgo.model.TodoList;
 import se.yrgo.model.User;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-            try (Scanner sc = new Scanner(System.in)) {
-                System.out.println("Enter ID: ");
-                int id = sc.nextInt();
+        try (Scanner sc = new Scanner(System.in)) {
+            User usr = createUser(sc);
+            TodoList tdl = new TodoList();
+            List<Task> incompleteTasks = tdl.filterTasks(false);
+            List<Task> completedTasks = tdl.filterTasks(true);
+            int in;
+            do {
+                System.out.printf("1. Create new task%n2. Remove task%n3. View tasks%n" +
+                        "4. Set task status%n5. Save lists%n6. Show user%n0. Exit%n");
+                in = sc.nextInt();
                 sc.nextLine();
-                System.out.println("Enter name: ");
-                String name = sc.nextLine();
-                System.out.println("Enter email: ");
-                String email = sc.nextLine();
-                User usr = new User(id, name, email);
-                TodoList tdl = new TodoList();
-                int in;
-                do {
-                    System.out.printf("1. Create new task%n2. Remove task%n3. View tasks%n" +
-                            "4. Set task status%n5. Save lists%n6. Show user%n0. Exit%n");
-                    in = sc.nextInt();
-                    sc.nextLine();
-                    switch (in) {
-                        case 1:
-                            String taskName;
-                            String desc;
-                            System.out.print("Name the task: ");
-                                taskName = sc.nextLine();
-                            System.out.print("Task description: ");
-                                desc = sc.nextLine();
-                            tdl.addTask(new Task(taskName, desc));
-                            break;
-                        case 2:
-                            if (tdl.filterTasks(false).isEmpty()) {
+                switch (in) {
+                    case 1:
+                        System.out.print("Name the task: ");
+                        String taskName = sc.nextLine();
+                        System.out.print("Task description: ");
+                        String desc = sc.nextLine();
+                        tdl.addTask(new Task(taskName, desc));
+                        break;
+                    case 2:
+                        if (incompleteTasks.isEmpty()) {
+                            System.out.println("No tasks found\n");
+                        } else {
+                            System.out.println("Which task will you remove?");
+                            for (int i = 0; i < incompleteTasks.size(); i++) {
+                                System.out.println(i+1 + ". " + incompleteTasks.get(i).toString());
+                            }
+                            System.out.println("0. Cancel");
+                            if (sc.nextInt() == 0) {
+                                break;
+                            }
+                            tdl.removeTask(incompleteTasks.get(sc.nextInt()-1));
+                            sc.nextLine();
+                        }
+                        break;
+                    case 3:
+                        System.out.printf("1. Show completed tasks%n2. Show incomplete tasks%n" +
+                                "0. Cancel%n");
+                        in = sc.nextInt();
+                        if (in == 1) {
+                            if (completedTasks.isEmpty()) {
                                 System.out.println("No tasks found\n");
                             } else {
-                                System.out.println("Which task will you remove?");
-                                for (int i = 0; i < tdl.filterTasks(false).size(); i++) {
-                                    System.out.println(i+1 + ". " + tdl.filterTasks(false).get(i).toString());
+                                for (Task task : tdl.filterTasks(true)) {
+                                    System.out.println(task.toString());
                                 }
-                                System.out.println("0. Cancel");
-                                if (sc.nextInt() == 0) {
-                                    break;
-                                }
-                                tdl.removeTask(tdl.filterTasks(false).get(sc.nextInt()-1));
-                                sc.nextLine();
                             }
+                        }
+                        else if (in == 2) {
+                            if (incompleteTasks.isEmpty()) {
+                                System.out.println("No tasks found\n");
+                            } else {
+                                for (Task task : incompleteTasks) {
+                                    System.out.println(task.toString());
+                                }
+                            }
+                        }
+                        break;
+                    case 4:
+                        System.out.printf("1. Completed tasks%n2. Incomplete tasks%n0. Cancel%n");
+                        in = sc.nextInt();
+                        if (in == 0) {
                             break;
-                        case 3:
-                            System.out.printf("1. Show completed tasks%n2. Show incomplete tasks%n0. Cancel%n");
-                            in = sc.nextInt();
-                            if (in == 1) {
-                                if (tdl.filterTasks(true).isEmpty()) {
-                                    System.out.println("No tasks found\n");
-                                } else {
-                                    for (Task task : tdl.filterTasks(true)) {
-                                        System.out.println(task.toString());
-                                    }
-                                }
-                            }
-                            else if (in == 2) {
-                                if (tdl.filterTasks(false).isEmpty()) {
-                                    System.out.println("No tasks found\n");
-                                } else {
-                                    for (Task task : tdl.filterTasks(false)) {
-                                        System.out.println(task.toString());
-                                    }
-                                }
-                            }
+                        } else if (in == 1) {
+                            setToIncomplete(completedTasks, sc);
+                        } else if (in == 2) {
+                            setToCompleted(incompleteTasks, sc);
+                        }
+                        sc.nextLine();
+                        break;
+                    case 5:
+                        System.out.printf("1. Save list%n0. Cancel%n");
+                        in = sc.nextInt();
+                        if (in == 0) {
                             break;
-                        case 4:
-                            System.out.printf("1. Completed tasks%n2. Incomplete tasks%n0. Cancel%n");
-                            in = sc.nextInt();
-                            if (in == 0) {
-                                break;
-                            } else if (in == 1) {
-                                if (tdl.filterTasks(true).isEmpty()) {
-                                    System.out.println("No tasks found\n");
-                                } else {
-                                    System.out.println("Which task will you set as incomplete?");
-                                    for (int i = 0; i < tdl.filterTasks(true).size(); i++) {
-                                        System.out.println(i+1 + ". " + tdl.filterTasks(true).get(i).toString());
-                                    }
-                                    in = sc.nextInt();
-                                    tdl.filterTasks(true).get(in-1).setCompleted(false);
+                        } else if (in == 1) {
+                            usr.addTodoList(tdl);
+                            tdl = new TodoList();
+                            System.out.printf("Saved list to user%n");
+                        }
+                        break;
+                    case 6:
+                        System.out.println(usr);
+                        break;
+                    case 0:
+                        System.out.println("Goodbye!");
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid input");
+                }
+            } while (in != 0);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 
-                                }
-                            } else if (in == 2) {
-                                if (tdl.filterTasks(false).isEmpty()) {
-                                    System.out.println("No tasks found\n");
-                                } else {
-                                    System.out.println("Which task will you set as complete?");
-                                    for (int i = 0; i < tdl.filterTasks(false).size(); i++) {
-                                        System.out.println(i+1 + ". " + tdl.filterTasks(false).get(i).toString());
-                                    }
-                                    in = sc.nextInt();
-                                    tdl.filterTasks(false).get(in -1).setCompleted(true);
-                                }
-                            }
-                            sc.nextLine();
-                            break;
-                        case 5:
-                            System.out.printf("1. Save list%n0. Cancel%n");
-                            in = sc.nextInt();
-                            if (in == 0) {
-                                break;
-                            } else if (in == 1) {
-                                usr.addTodoList(tdl);
-                                tdl = new TodoList();
-                                System.out.printf("Saved list to user%n");
-                            }
-                            break;
-                        case 6:
-                            System.out.println(usr.toString());
-                            break;
-                        case 0:
-                            System.out.println("Goodbye!");
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Invalid input");
-                    }
-                } while (in != 0);
-            } catch (IllegalArgumentException e) {
-                System.err.println(e.getMessage());
+    /**
+     * Asks the user for ID, name and email from the terminal,
+     * using these as argument for creating an instance of User
+     *
+     * @param sc
+     * @return a User object
+     */
+    private static User createUser(Scanner sc) {
+        System.out.println("Enter ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Enter name: ");
+        String name = sc.nextLine();
+        System.out.println("Enter email: ");
+        String email = sc.nextLine();
+        return new User(id, name, email);
+    }
+
+    /**
+     * Sets a completed task of choice to incomplete,
+     * prints "No tasks found" if the list of tasks is empty
+     * @param completedTasks list of completed tasks
+     * @param sc
+     */
+    private static void setToIncomplete(List<Task> completedTasks, Scanner sc) {
+        if (completedTasks.isEmpty()) {
+            System.out.println("No tasks found\n");
+        } else {
+            System.out.println("Which task will you set as incomplete?");
+            for (int i = 0; i < completedTasks.size(); i++) {
+                System.out.println(i+1 + ". " + completedTasks.get(i).toString());
             }
+            completedTasks.get(sc.nextInt()-1).setCompleted(false);
+        }
+    }
 
+    /**
+     * Sets an incomplete task of choice to completed,
+     * prints "No tasks found" if list of tasks is empty
+     * @param incompleteTasks list of incomplete tasks
+     * @param sc
+     */
+    private static void setToCompleted(List<Task> incompleteTasks, Scanner sc) {
+        if (incompleteTasks.isEmpty()) {
+            System.out.println("No tasks found\n");
+        } else {
+            System.out.println("Which task will you set as complete?");
+            for (int i = 0; i < incompleteTasks.size(); i++) {
+                System.out.println(i+1 + ". " + incompleteTasks.get(i).toString());
+            }
+            incompleteTasks.get(sc.nextInt() -1).setCompleted(true);
+        }
     }
 }

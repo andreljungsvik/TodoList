@@ -2,27 +2,37 @@ package se.yrgo.main;
 
 import se.yrgo.model.Task;
 import se.yrgo.model.TodoList;
+import se.yrgo.model.User;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
             try (Scanner sc = new Scanner(System.in)) {
+                System.out.println("Enter ID: ");
+                int id = sc.nextInt();
+                sc.nextLine();
+                System.out.println("Enter name: ");
+                String name = sc.nextLine();
+                System.out.println("Enter email: ");
+                String email = sc.nextLine();
+                User usr = new User(id, name, email);
                 TodoList tdl = new TodoList();
                 int in;
                 do {
-                    System.out.printf("1. Create new task%n2. Remove task%n3. View tasks%n4. Set task status%n0. Exit%n");
+                    System.out.printf("1. Create new task%n2. Remove task%n3. View tasks%n" +
+                            "4. Set task status%n5. Save lists%n6. Show user%n0. Exit%n");
                     in = sc.nextInt();
                     sc.nextLine();
                     switch (in) {
                         case 1:
-                            String name;
+                            String taskName;
                             String desc;
                             System.out.print("Name the task: ");
-                                name = sc.nextLine();
+                                taskName = sc.nextLine();
                             System.out.print("Task description: ");
                                 desc = sc.nextLine();
-                            tdl.addTask(new Task(name, desc));
+                            tdl.addTask(new Task(taskName, desc));
                             break;
                         case 2:
                             if (tdl.filterTasks(false).isEmpty()) {
@@ -92,6 +102,20 @@ public class Main {
                                 }
                             }
                             sc.nextLine();
+                            break;
+                        case 5:
+                            System.out.printf("1. Save list%n0. Cancel%n");
+                            in = sc.nextInt();
+                            if (in == 0) {
+                                break;
+                            } else if (in == 1) {
+                                usr.addTodoList(tdl);
+                                tdl = new TodoList();
+                                System.out.printf("Saved list to user%n");
+                            }
+                            break;
+                        case 6:
+                            System.out.println(usr.toString());
                             break;
                         case 0:
                             System.out.println("Goodbye!");

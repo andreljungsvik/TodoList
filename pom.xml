@@ -32,7 +32,7 @@
                     <archive>
                         <manifest>
                             <mainClass>
-                                ui.Main
+                                se.yrgo.main.Main
                             </mainClass>
                         </manifest>
                     </archive>

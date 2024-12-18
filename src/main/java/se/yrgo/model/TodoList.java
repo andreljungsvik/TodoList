@@ -19,6 +19,7 @@ public class TodoList {
     }
 
     public List<Task> filterTasks(boolean completed) {
+        //returnera en tom lsita utifall task av förmodan skulle vara null
         List<Task> filtered = new ArrayList<>();
         for (Task task : tasks) {
             if (task.isCompleted() == completed) {

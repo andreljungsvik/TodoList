@@ -24,13 +24,17 @@ public class UserTest {
 
         user.addTodoList(list1);
         user.addTodoList(list2);
-        user.addTodoList(list1); // Försöker lägga till samma lista igen
 
         List<TodoList> lists = user.getTodoLists();
 
         assertEquals(2, lists.size());
         assertTrue(lists.contains(list1));
         assertTrue(lists.contains(list2));
+    }
+    @Test
+    public void testAddTodoListException() {
+        User user = new User(1, "Anna", "anna@example.com");
+        assertThrows(IllegalArgumentException.class, () -> user.addTodoList(null));
     }
 
     @Test

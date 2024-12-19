@@ -31,8 +31,10 @@ public class User {
      * @param list todolist som ska läggas till
      */
     public void addTodoList(TodoList list) {
-        if (list != null && !todoLists.contains(list)) {
-            this.todoLists.add(list);
+        if (todoLists.contains(null)) {
+            throw new IllegalArgumentException("Todo lists cannot contain null or be empty");
+        } else {
+            todoLists.add(list);
         }
     }
 

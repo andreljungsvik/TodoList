@@ -37,14 +37,14 @@ public class Main {
                             for (int i = 0; i < tdl.filterTasks(false).size(); i++) {
                                 System.out.println(i+1 + ". " + tdl.filterTasks(false).get(i).toString());
                             }
-                            System.out.println("0. Cancel");
+                            //System.out.println("0. Cancel");
                             in = sc.nextInt();
                             if (in > tdl.filterTasks(false).size() || in < 0) {
                                 throw new IllegalArgumentException("invalid input");
                             }
-                            if (in == 0) {
-                                break;
-                            }
+                            //if (in == 0) {
+                            //    break;
+                            //}
                             tdl.removeTask(tdl.filterTasks(false).get(in-1));
                         }
                         break;
@@ -59,6 +59,9 @@ public class Main {
                         } else if (in == 1) {
                             showCurrentTasks(tdl, sc);
                         } else if (in == 2) {
+                            if (usr.getTodoLists().isEmpty()) {
+                                System.out.println("No tasks found\n");
+                            }
                             for (int i = 1; i <= usr.getTodoLists().size(); i++) {
                                 System.out.println("Todo list " + i);
                                 for (int j = 0; j < usr.getTodoLists().get(i-1).getTasks().size(); j++) {

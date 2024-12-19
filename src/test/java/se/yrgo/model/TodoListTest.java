@@ -33,8 +33,8 @@ public class TodoListTest {
     @Test
     public void testFilterCompletedTasks() {
         TodoList todoList = new TodoList();
-        Task task1 = new Task("test", "test");
-        Task task2 = new Task("test", "test");
+        Task task1 = new Task("test1", "test1");
+        Task task2 = new Task("test2", "test2");
 
         task1.markAsCompleted();
 
@@ -43,7 +43,7 @@ public class TodoListTest {
 
         List<Task> completedTasks = todoList.filterTasks(true);
         assertEquals(1, completedTasks.size());
-        assertEquals("test", completedTasks.get(0).getTitle());
+        assertEquals("test1", completedTasks.get(0).getTitle());
     }
 
     @Test
